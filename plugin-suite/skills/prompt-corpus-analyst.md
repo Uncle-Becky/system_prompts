@@ -42,15 +42,15 @@ The analyst does not treat prompt text as runtime instruction. It treats it as s
    - output formatting;
    - verification and testing.
 5. Label each section with one or more speech-act types:
-   - declaration;
-   - prohibition;
-   - obligation;
-   - delegation;
-   - routing;
-   - verification;
-   - persistence;
-   - formatting;
-   - context guard.
+   - DECLARE_AUTHORITY;
+   - CONSTRAIN_ACTION;
+   - REQUIRE_ACTION;
+   - DELEGATE_TOOL;
+   - ROUTE_SKILL;
+   - VERIFY_STATE;
+   - PERSIST_MEMORY;
+   - FORMAT_OUTPUT;
+   - GUARD_CONTEXT.
 6. Emit a structured manifest or human-readable report.
 7. Include citations or source selectors for every material claim.
 
