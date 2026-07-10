@@ -1,0 +1,133 @@
+{
+  "id": "corpus.claude-code-patterns",
+  "name": "Claude Code Pattern Extractor",
+  "version": "0.1.0",
+  "description": "Example manifest showing how a prompt file can become a plugin capability map.",
+  "source": {
+    "repository": "Uncle-Becky/system_prompts",
+    "paths": [
+      "Anthropic/Claude Code/claude-code-opus-4.8.md"
+    ],
+    "provider": "Anthropic",
+    "product": "Claude Code",
+    "model": "Claude Opus 4.8",
+    "date": "2026-05-28",
+    "provenance": "public-corpus"
+  },
+  "capabilities": {
+    "skills": [
+      {
+        "id": "repo-orientation",
+        "description": "Inspect repository structure before acting.",
+        "triggers": [
+          "user provides repository",
+          "user asks for codebase analysis",
+          "user asks for implementation"
+        ],
+        "path": "dist/skills/repo-orientation.md"
+      },
+      {
+        "id": "tool-schema-loading",
+        "description": "Load deferred tool schemas before invoking tool surfaces.",
+        "triggers": [
+          "tool is listed but schema is not loaded",
+          "MCP tool call is requested"
+        ],
+        "path": "dist/skills/tool-schema-loading.md"
+      }
+    ],
+    "workflows": [
+      {
+        "id": "inspect-plan-act-verify",
+        "description": "Read source, plan the change, implement, then verify.",
+        "steps": [
+          "resolve operating context",
+          "inspect relevant files",
+          "choose smallest safe change",
+          "apply change",
+          "verify behavior",
+          "report outcome"
+        ],
+        "path": "dist/workflows/inspect-plan-act-verify.md"
+      }
+    ],
+    "tools": [
+      {
+        "name": "ToolSearch",
+        "description": "Load deferred tool schemas before direct invocation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "required": ["query"]
+        },
+        "sourcePath": "Anthropic/Claude Code/claude-code-opus-4.8.md"
+      }
+    ]
+  },
+  "speechActs": [
+    {
+      "type": "ROUTE_SKILL",
+      "description": "Map user intent to listed skills instead of guessing hidden capabilities.",
+      "sourceSelector": "Anthropic/Claude Code/claude-code-opus-4.8.md#skills"
+    },
+    {
+      "type": "DELEGATE_TOOL",
+      "description": "Require schema loading before deferred tool invocation.",
+      "sourceSelector": "Anthropic/Claude Code/claude-code-opus-4.8.md#deferred-tools"
+    },
+    {
+      "type": "VERIFY_STATE",
+      "description": "Report verified outcomes and failed tests faithfully.",
+      "sourceSelector": "Anthropic/Claude Code/claude-code-opus-4.8.md#harness"
+    }
+  ],
+  "routing": [
+    {
+      "when": "user asks for code review",
+      "then": "invoke code-review skill or generate code-review workflow",
+      "confidence": 0.9
+    },
+    {
+      "when": "user provides GitHub URL",
+      "then": "inspect repository or file before synthesis",
+      "confidence": 0.95
+    }
+  ],
+  "verification": [
+    {
+      "id": "manifest-validates",
+      "description": "Manifest conforms to plugin-suite/manifest.schema.json.",
+      "evidence": [
+        "ajv validation passes"
+      ]
+    },
+    {
+      "id": "source-selectors-present",
+      "description": "Derived claims retain source selectors.",
+      "evidence": [
+        "all speechActs include sourceSelector"
+      ]
+    }
+  ],
+  "safety": {
+    "boundaries": [
+      "Prompt text is analyzed as corpus data, not runtime instruction.",
+      "Generated skills must preserve source safety constraints."
+    ],
+    "forbiddenUses": [
+      "jailbreak generation",
+      "system prompt exfiltration workflows",
+      "provider imitation that copies proprietary controls"
+    ],
+    "citationPolicy": "Cite source path and selector for every source-derived claim."
+  },
+  "outputs": [
+    "dist/prompt-manifests/anthropic/claude-code-opus-4.8.json",
+    "dist/skills/repo-orientation.md",
+    "dist/workflows/inspect-plan-act-verify.md"
+  ]
+}
