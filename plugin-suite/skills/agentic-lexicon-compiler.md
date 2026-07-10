@@ -76,7 +76,7 @@ Act as a senior engineer. Read the repo first. Build the smallest scalable imple
 ```text
 @role(engineer.senior)
 @read(repo).before(@plan)
-@build(minimal && scalable)
+@act(minimal && scalable)
 @gate(verify).before(final)
 ```
 
